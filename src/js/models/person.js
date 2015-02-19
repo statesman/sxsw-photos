@@ -32,7 +32,7 @@ define(['backbone'], function(Backbone) {
      */
     _parseCoord: function(c) {
       return c.split(',').map(function(c) {
-        return parseInt(c, 10);
+        return parseInt(c, 10) / 100;
       });
     },
 
@@ -49,21 +49,5 @@ define(['backbone'], function(Backbone) {
     }
 
   });
-
-
-    /*
-    // Get new trigger info from the DOM
-    $('.person').each(function(i, el) {
-      var $el = $(el);
-      triggers.push({
-        offset: $el.offset().top,
-        el: $el,
-        tx: $el.data('tx'),
-        ty: $el.data('ty'),
-        bx: $el.data('bx'),
-        by: $el.data('by')
-      });
-    });
-    */
 
 });

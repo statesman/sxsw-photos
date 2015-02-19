@@ -54,7 +54,9 @@ define(['backbone', 'leaflet'], function(Backbone, L) {
      * Setup an image layer and add it to the map
      */
     focusPerson: function(person) {
-      this._setupImage(person.photo);
+      if(typeof this.image === "undefined") {
+        this._setupImage(person.photo);
+      }
 
       // Create a LatLngBounds around the person and focus on it
       var focusBounds = new L.LatLngBounds(
@@ -64,6 +66,7 @@ define(['backbone', 'leaflet'], function(Backbone, L) {
 
       this.map.fitBounds(focusBounds, {
         animate: true,
+        padding: [10, 10],
         pan: {
           duration: 1
         }

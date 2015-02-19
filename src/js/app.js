@@ -3,45 +3,40 @@ require([
   'collections/photos',
   'collections/people',
   'views/photo',
+  'lib/router',
   'data/photos'
-], function($, PhotosCollection, PeopleCollection, PhotoView, photosData) {
+], function($, PhotosCollection, PeopleCollection, PhotoView, Router, photosData) {
 
   'use strict';
 
-  // Setup the photos collection
-  var photos = new PhotosCollection(photosData);
+  $(function() {
 
-  // Setup the people collection with info from the DOM
-  var triggers = [];
-  $('.person').each(function(i, el) {
-    triggers.push({
-      el: el
+    // Setup the people collection with info from the DOM; marry it up with the
+    // bootstrapped photos data
+    var triggers = [];
+    $('.person').each(function(i, el) {
+      triggers.push({
+        el: el
+      });
     });
-  });
-  var people = new PeopleCollection(triggers, {
-    photos: photos
-  });
+    var people = new PeopleCollection(triggers, {
+      photos: new PhotosCollection(photosData)
+    });
 
-  // Setup the map view ...
-  var map = new PhotoView({
-    el: '#photo',
-    collection: people
-  });
-  // ... and select the first image
-  people.setActive(people.at(0));
+    // Setup the map view ...
+    var map = new PhotoView({
+      el: '#photo',
+      collection: people
+    });
 
-  /*
-  window.person1 = new L.LatLngBounds(
-    map.map.unproject(img.xy(0.8, 0.45)),
-    map.map.unproject(img.xy(0.55, 0.7))
-  );
+    // Fire up the router
+    var app = new Router({
+      people: people
+    });
+    
+    // Enable hashChange tracking
+    Backbone.history.start();
 
-  map.map.fitBounds(person1, {
-    animate: true,
-    pan: {
-      duration: 1
-    }
   });
-  */
 
 });
