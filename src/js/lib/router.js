@@ -6,12 +6,17 @@ define(['backbone'], function(Backbone) {
       // Store the PeopleCollection; we'll use it to update our views
       this.people = options.people;
 
+      // A flag to check to know if we should be watching the scroll for
+      // routing purposes
+      this.watchScroll = true;
+
       // Initially, set our views based on depth and bind to the scroll so
       // we continue to do so
-      this.routeByDepth(this._calcDepth());
       var self = this;
       $(window).on('scroll', _.debounce(function() {
-        self.routeByDepth(self._calcDepth());
+        if(self.watchScroll) {
+          self.routeByDepth(self._calcDepth());
+        }
       }, 100));
 
       // Listen for for a manual change from the collection and scroll to match
@@ -35,7 +40,7 @@ define(['backbone'], function(Backbone) {
       var active = this.people.getByDepth(depth);
 
       // TODO: Use an actual model ID or something else meaningful here
-      this.navigate(active.cid, {trigger: true, replace: true});
+      this.navigate(active.cid, {trigger: true});
     },
 
     /*
@@ -44,9 +49,17 @@ define(['backbone'], function(Backbone) {
      */
     scrollToPerson: function(person) {
       var toDepth = person.get('offset') - $('#controls').outerHeight() - $(window).height() * 0.5;
+
+      // Temporarly ignore scrolling and do an animated scroll to our person
+      this.watchScroll = false;
+      var self = this;
       $('html, body').animate({
         scrollTop: toDepth
-      }, 500);
+      }, 500, function() {
+        self.watchScroll = true;
+      });
+
+      this.people.setActive(person);
     },
 
     /*
@@ -58,10 +71,16 @@ define(['backbone'], function(Backbone) {
     },
 
     /*
-     * The person route
+     * The person route; if this is a fresh page load, set the scroll and route;
+     * otherwise, just route based on hash changes
      */
     person: function(person) {
-      this.people.setActive(person);
+      if($(window).scrollTop() === 0) {
+        this.scrollToPerson(this.people.get(person));
+      }
+      else {
+        this.people.setActive(person);
+      }
     }
 
   });
