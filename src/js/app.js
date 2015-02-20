@@ -1,11 +1,14 @@
 require([
   'jquery',
+  'backbone',
   'collections/photos',
   'collections/people',
   'views/photo',
+  'views/controls',
   'lib/router',
   'data/photos'
-], function($, PhotosCollection, PeopleCollection, PhotoView, Router, photosData) {
+], function(
+  $, Backbone, PhotosCollection, PeopleCollection, PhotoView, ControlsView, Router, photosData) {
 
   'use strict';
 
@@ -23,9 +26,15 @@ require([
       photos: new PhotosCollection(photosData)
     });
 
-    // Setup the map view ...
+    // Setup the map view
     var map = new PhotoView({
       el: '#photo',
+      collection: people
+    });
+
+    // Setup the controls
+    var controls = new ControlsView({
+      el: '#controls',
       collection: people
     });
 
@@ -33,7 +42,7 @@ require([
     var app = new Router({
       people: people
     });
-    
+
     // Enable hashChange tracking
     Backbone.history.start();
 

@@ -101,17 +101,21 @@
         </div>
       <?php endfor; ?>
 
-      <nav id="controls" class="navbar">
-        <div class="container">
-          <ul class="nav navbar-nav">
-            <li><a href="#">Prev</a></li>
-            <li><a href="#">Expand/contract</a></li>
-            <li><a href="#">Next</i></a></li>
-          </ul>
-        </div>
-      </nav>
+      <div id="photo-wrapper">
+        <div id="photo" class="container"></div>
 
-      <div id="photo"></div>
+        <nav id="controls" class="navbar container">
+          <div class="control">
+            <a id="prev" href="#"><i class="fa fa-chevron-left"></i></a>
+          </div>
+          <div class="control">
+            <span id="photo-label">Name</span>
+          </div>
+          <div class="control pull-right">
+            <a id="next" href="#"><i class="fa fa-chevron-right"></i></a>
+          </div>
+        </nav>
+      </div>
     </article>
 
     <div class="clearfix" id="ads">

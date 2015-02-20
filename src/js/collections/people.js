@@ -34,12 +34,49 @@ define(['backbone', 'models/person'], function(Backbone, PersonModel) {
     },
 
     /*
-     * Set the active photo; the map view listens for this event; can be
-     * passed anything that .get() accepts (id, cid, model, etc.)
+     * Set the active photo; the map view listens for this event; also updates
+     * first and last boolean properties
      */
     setActive: function(person) {
+      // Pluck the new active model from the collection
       this.active = this.get(person);
+
+      // Set first and last flags
+      var i = this.indexOf(this.active);
+      if(i === (this.length - 1)) {
+        this.first = true;
+      }
+      else {
+        this.first = false;
+      }
+      if(i === 0) {
+        this.last = true;
+      }
+      else {
+        this.last = false;
+      }
+
+      // Fire an event to update views
       this.trigger('personChange', this.active);
+    },
+
+    /*
+     * Move forward/back through the collection by firing an event that sets
+     * off the router
+     */
+    prevPerson: function() {
+      if(this.first) {
+        return;
+      }
+      var i = this.indexOf(this.active);
+      this.trigger('manualPersonChange', this.at(i + 1));
+    },
+    nextPerson: function() {
+      if(this.last) {
+        return;
+      }
+      var i = this.indexOf(this.active);
+      this.trigger('manualPersonChange', this.at(i - 1));
     }
 
   });
