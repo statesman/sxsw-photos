@@ -39,13 +39,25 @@ define(['backbone'], function(Backbone) {
     /*
      * Methods that return the corner coordinates of the person, within the photo
      */
-    ne: function() {
-      var ne = this.get('ne');
-      return this.photo.xy(ne[0], ne[1]);
+    ne: function(bounds) {
+      var ne = this.get('ne'),
+          size = this._getSize(bounds);
+      return [ne[0] * size.w, ne[1] * size.h];
     },
-    sw: function() {
-      var sw = this.get('sw');
-      return this.photo.xy(sw[0], sw[1]);
+    sw: function(bounds) {
+      var sw = this.get('sw'),
+          size = this._getSize(bounds);
+      return [sw[0] * size.w, sw[1] * size.h];
+    },
+
+    /*
+     * Get the width and length of the map, based on its bounds
+     */
+    _getSize: function(bounds) {
+      return {
+        w: bounds.getEast() - bounds.getWest(),
+        h: bounds.getNorth() - bounds.getSouth()
+      };
     }
 
   });
